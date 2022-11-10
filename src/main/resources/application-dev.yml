@@ -1,0 +1,50 @@
+logging:
+    level:
+        ROOT: INFO
+
+spring:
+    datasource:
+        url: jdbc:mariadb://${DATABASE_HOST:localhost}:${MARIADB_PORT_NUMBER:3307}/apartment_online_market?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        username: auth
+        password: auth123
+        driver-class-name: org.mariadb.jdbc.Driver
+        hikari:
+            maximum-pool-size: 10
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MariaDB103Dialect
+
+    redis:
+        database: 0
+        address: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+        connection-pool-size: 4
+        connection-minimum-idle-size: 2
+        token-prefix: project-management:token
+        token-time-to-live: 1800
+
+keystore:
+    password: team92pass
+
+# Config Swagger  UI
+springdoc:
+    api-docs:
+        path: /v1/api-docs
+    swagger-ui:
+        path: /swagger-ui-custom.html
+        operationsSorter: method
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        health:
+            show-details: always
+
+logstash:
+    host: ${LOGSTASH_HOST_PORT:localhost:5044}

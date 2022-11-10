@@ -1,0 +1,15 @@
+
+server:
+    port: 9090
+
+spring:
+    application:
+        name: apartment-online-market
+    profiles:
+        active: dev
+
+application:
+    security:
+        authentication:
+            access-token-validity-in-seconds: 360
+            refresh-token-validity-in-seconds: 1800
