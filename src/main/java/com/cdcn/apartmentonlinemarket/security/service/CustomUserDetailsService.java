@@ -1,9 +1,9 @@
 package com.cdcn.apartmentonlinemarket.security.service;
 
 import com.cdcn.apartmentonlinemarket.common.enums.UserStatus;
-import com.cdcn.apartmentonlinemarket.domain.entity.Users;
+import com.cdcn.apartmentonlinemarket.users.domain.entity.Users;
 import com.cdcn.apartmentonlinemarket.exception.UserNotFoundException;
-import com.cdcn.apartmentonlinemarket.repository.UserRepository;
+import com.cdcn.apartmentonlinemarket.users.repository.UserRepository;
 import com.cdcn.apartmentonlinemarket.security.model.CustomUserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

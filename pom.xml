@@ -59,13 +59,6 @@
             <version>${commons-lang3.version}</version>
         </dependency>
 
-        <!--  Logstash-Logback Encoder  -->
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>${logstash-logback-encoder.version}</version>
-        </dependency>
-
         <!--         SWAGGER UI  -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -155,30 +148,49 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.4</version>
+                <configuration>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--  plugins for sonarqube  -->
-<!--            <plugin>-->
-<!--                <groupId>org.sonarsource.scanner.maven</groupId>-->
-<!--                <artifactId>sonar-maven-plugin</artifactId>-->
-<!--                <version>3.9.1.2184</version>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
+            </plugin>
         </plugins>
     </build>
 
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>sonar</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>true</activeByDefault>-->
-<!--            </activation>-->
-<!--            <properties>-->
-<!--                <sonar.host.url>http://localhost:10000</sonar.host.url>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--    </profiles>-->
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>maven-group</id>-->
-<!--            <url>http://localhost:8081/repository/maven-group/</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.host.url>http://146.190.105.184:10000</sonar.host.url>
+                <sonar.projectKey>apartment-market-oline</sonar.projectKey>
+                <sonar.login>sqp_d0eba2568a634e49fee0926eb2ebedb7cd0ef5dd</sonar.login>
+            </properties>
+        </profile>
+    </profiles>
 </project>

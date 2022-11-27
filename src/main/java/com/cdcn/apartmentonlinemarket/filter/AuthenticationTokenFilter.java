@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static net.logstash.logback.argument.StructuredArguments.v;
-
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -52,7 +50,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             log.error("[Error] | Code: {} | Type: {} | Path: {} | Elapsed time: {} ms | Message: {}",
                     invalidTokenHeader.getCode(), "InvalidTokenHeader", String.join(" ",
                             ((HttpServletRequest) request).getMethod(), ((HttpServletRequest) request).getRequestURI()),
-                    v("elapsed_time", null), invalidTokenHeader.getMessage());
+                    0, invalidTokenHeader.getMessage());
             ErrorResponse errorResponse = ErrorResponse.builder()
                     .code(HttpStatus.UNAUTHORIZED.value())
                     .message(invalidTokenHeader.getMessage()).build();

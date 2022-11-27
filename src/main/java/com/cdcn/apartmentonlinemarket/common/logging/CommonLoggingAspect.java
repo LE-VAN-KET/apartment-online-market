@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import static net.logstash.logback.argument.StructuredArguments.v;
-
 @Slf4j
 @Aspect
 @Component
@@ -21,7 +19,7 @@ public class CommonLoggingAspect {
     @Autowired
     private WebUtil webUtil;
 
-    @Around("execution(* com.cdcn.apartmentonlinemarket.controller..*(..)))")
+    @Around("execution(* com.cdcn.apartmentonlinemarket.controller.*.*(..))")
     public Object logEndpoints(ProceedingJoinPoint joinPoint) throws Throwable {
         String uri = webUtil.getRequestUri();
 
@@ -31,15 +29,15 @@ public class CommonLoggingAspect {
         Map<String, Object> params = LogUtil.getParamsAsMap(methodSignature.getParameterNames(),
                 joinPoint.getArgs());
 
-        log.debug("[Request]  | Uri: {} [{}.{}] | Params: {}", v("uri", uri), className,
-                methodName, v("params", params));
+        log.debug("[Request]  | Uri: {} [{}.{}] | Params: {}", uri, className,
+                methodName, params);
 
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long elapsedTime = System.currentTimeMillis() - start;
 
         log.debug("[Response] | Uri: {} [{}.{}] | Elapsed time: {} ms | Result: {}",
-                uri, className, methodName, v("elapsed_time", elapsedTime), result);
+                uri, className, methodName, elapsedTime, result);
 
         return result;
     }
