@@ -40,6 +40,11 @@ public class Users implements Serializable {
 
     private String mailNotification;
 
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
     @Enumerated(EnumType.ORDINAL)
     private UserStatus status;
 
@@ -60,4 +65,7 @@ public class Users implements Serializable {
 
     @OneToMany(mappedBy = "")
     private Set<Orders> orders;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 }
