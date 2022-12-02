@@ -1,10 +1,10 @@
 package com.cdcn.apartmentonlinemarket.common.enums;
 
-public enum UserPrioty {
+public enum UserPriority {
     LOWEST(0), LOW(1), MEDIUM(2), HIGH(3), HIGHEST(4);
     private final int value;
 
-    UserPrioty(int value) {
+    UserPriority(int value) {
         this.value = value;
     }
 

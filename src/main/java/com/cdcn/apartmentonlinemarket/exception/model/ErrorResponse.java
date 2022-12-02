@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,5 +32,10 @@ public class ErrorResponse implements Serializable {
         this.code = code;
         this.message = message;
         this.messages = messages;
+    }
+
+    public ErrorResponse(HttpStatus badRequest, String message) {
+        this.code = badRequest.value();
+        this.message = message;
     }
 }

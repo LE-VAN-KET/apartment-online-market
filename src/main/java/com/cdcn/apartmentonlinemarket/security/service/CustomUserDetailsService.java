@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserPrincipal loadUserByUsername(String username) {
         Users user = userRepository.findJoinRoleByUsernameEqualsIgnoreCaseAndIsDeleteAndStatus(username,
                         false, UserStatus.ACTIVE)
-                .orElseThrow(() -> new UserNotFoundException(401, "Username is not found!"));
+                .orElseThrow(() -> new UserNotFoundException("Username is not found!"));
 
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user);
 

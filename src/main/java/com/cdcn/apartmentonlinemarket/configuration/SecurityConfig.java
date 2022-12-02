@@ -74,8 +74,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers(h -> h.contentSecurityPolicy("script-src 'self'"))
+                .cors().and().csrf().disable()
             // enable cors and prevent CSRF
-            .cors().and().csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+//            .cors().and().csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
             // set session management stateless
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             // set unauthorized request exception handler
@@ -88,7 +89,7 @@ public class SecurityConfig {
             )
             // set permission on endpoints
             .authorizeHttpRequests( a -> a
-                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .antMatchers("/api/**").permitAll()
                     .anyRequest().authenticated()
             )
             .logout(out -> out

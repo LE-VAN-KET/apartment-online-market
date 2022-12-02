@@ -17,4 +17,6 @@ public interface UserRepository extends IJpaRepository<Users, UUID> {
     Optional<Users> findJoinRoleByUsernameEqualsIgnoreCaseAndIsDeleteAndStatus(@Param("username") String username,
                                                                                @Param("isDelete") Boolean isDelete,
                                                                                @Param("status") UserStatus status);
+    boolean existsByUsername(String username);
+    boolean existsByMailNotification(String email);
 }
