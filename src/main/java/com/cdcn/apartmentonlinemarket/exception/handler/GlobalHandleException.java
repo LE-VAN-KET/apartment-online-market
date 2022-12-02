@@ -2,6 +2,7 @@ package com.cdcn.apartmentonlinemarket.exception.handler;
 
 import com.cdcn.apartmentonlinemarket.common.util.MessageSourceUtil;
 import com.cdcn.apartmentonlinemarket.common.util.WebUtil;
+import com.cdcn.apartmentonlinemarket.exception.*;
 import com.cdcn.apartmentonlinemarket.exception.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,10 +38,11 @@ public class GlobalHandleException {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult()
-                .getFieldErrors()
+                .getAllErrors()
                 .stream()
                 .map(x ->
-                        String.format("'%s' %s", x.getField(), messageSourceUtil.getMessage(x.getDefaultMessage())
+                        String.format("'%s' %s", x instanceof FieldError ? ((FieldError) x).getField():
+                                        x.getObjectName(), messageSourceUtil.getMessage(x.getDefaultMessage())
                         ))
                 .collect(Collectors.toList());
 
@@ -104,6 +107,42 @@ public class GlobalHandleException {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 errors);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleBadRequestException(Exception ex, String exceptionType) {
+        this.addErrorLog(HttpStatus.BAD_REQUEST, ex.getMessage(), exceptionType);
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ErrorResponse handleNotFoundException(Exception ex, String exceptionType) {
+        this.addErrorLog(HttpStatus.NOT_FOUND, ex.getMessage(), exceptionType);
+        return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    protected ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
+        return handleNotFoundException(ex, "UserNotFoundException");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserBadCredentialsException.class)
+    protected ErrorResponse handleUserBadCredentialsException(UserBadCredentialsException ex) {
+        return handleBadRequestException(ex, "UserBadCredentialsException");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({UsernameAlreadyExist.class, EmailAlreadyExist.class})
+    protected ErrorResponse handleUsernameAlreadyExistException(Exception ex) {
+        return handleBadRequestException(ex, "DataAlreadyExist");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RoleNotFoundException.class)
+    protected ErrorResponse handleRoleNotFoundException(RoleNotFoundException ex) {
+        return handleNotFoundException(ex, "RoleNotFoundException");
     }
 
 }

@@ -19,7 +19,7 @@ public class CommonLoggingAspect {
     @Autowired
     private WebUtil webUtil;
 
-    @Around("execution(* com.cdcn.apartmentonlinemarket.controller.*.*(..))")
+    @Around("execution(* com.cdcn.apartmentonlinemarket.*.controller..*(..)))")
     public Object logEndpoints(ProceedingJoinPoint joinPoint) throws Throwable {
         String uri = webUtil.getRequestUri();
 
