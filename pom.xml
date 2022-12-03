@@ -172,25 +172,26 @@
                 </executions>
             </plugin>
             <!--  plugins for sonarqube  -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.sonarsource.scanner.maven</groupId>-->
+<!--                <artifactId>sonar-maven-plugin</artifactId>-->
+<!--                <version>3.9.1.2184</version>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>sonar</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <sonar.host.url>http://146.190.105.184:10000</sonar.host.url>
-                <sonar.projectKey>apartment-market-oline</sonar.projectKey>
-                <sonar.login>sqp_d0eba2568a634e49fee0926eb2ebedb7cd0ef5dd</sonar.login>
-            </properties>
-        </profile>
-    </profiles>
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>sonar</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <properties>-->
+<!--                <sonar.host.url>http://146.190.105.184:10000</sonar.host.url>-->
+<!--                <sonar.projectKey>apartment-market-oline</sonar.projectKey>-->
+<!--                <sonar.login>sqp_d0eba2568a634e49fee0926eb2ebedb7cd0ef5dd</sonar.login>-->
+<!--                <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 </project>
