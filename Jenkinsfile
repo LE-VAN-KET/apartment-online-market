@@ -30,8 +30,8 @@ pipeline{
                 echo 'Test stage'
                 script {
                     sh "echo 'JUnit testing...'"
-                    sh "./mvnw -s settings.xml test"
-                    jacoco(execPattern: 'user-service/target/jacoco.exec')
+                    sh "./mvnw test"
+                    jacoco(execPattern: 'target/jacoco.exec')
                 }
             }
         }
