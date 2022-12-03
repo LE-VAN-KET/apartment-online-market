@@ -89,11 +89,8 @@ pipeline{
                     """
 
                     echo "Login into server restart container"
-                    echo "SSH remote to server to run docker-compose"
-                    sh """ssh -i ~/.ssh/id_rsa_ggcloud khanhdpdx@34.142.222.244 docker pull \
-                    vanket/apartment-online-market:1.0.0 && docker run -d --name KMS-BE  \
-                    -p 9090:9090  vanket/apartment-online-market:1.0.0
-                    """
+                    sh "scp -i ~/.ssh/id_rsa_ggcloud -r deploy.sh khanhdpdx@34.142.222.244:/root/"
+                    sh "ssh -i ~/.ssh/id_rsa_ggcloud khanhdpdx@34.142.222.244 ./deploy.sh"
 
                     echo "Exit remote server"
                 }

@@ -1,6 +1,7 @@
 logging:
     level:
         ROOT: INFO
+        com.cdcn.apartmentonlinemarket: DEBUG
 
 spring:
     datasource:

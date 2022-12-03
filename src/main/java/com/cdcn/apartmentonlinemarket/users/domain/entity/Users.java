@@ -1,6 +1,6 @@
 package com.cdcn.apartmentonlinemarket.users.domain.entity;
 
-import com.cdcn.apartmentonlinemarket.common.enums.UserPrioty;
+import com.cdcn.apartmentonlinemarket.common.enums.UserPriority;
 import com.cdcn.apartmentonlinemarket.common.enums.UserStatus;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.Orders;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,16 +35,16 @@ public class Users implements Serializable {
     private String password;
 
     @Enumerated(EnumType.ORDINAL)
-    private UserPrioty userPrioty;
+    private UserPriority userPriority = UserPriority.LOWEST;
 
-    private Boolean isDelete;
+    private Boolean isDelete = false;
 
     private String mailNotification;
 
     @Enumerated(EnumType.ORDINAL)
-    private UserStatus status;
+    private UserStatus status = UserStatus.ACTIVE;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInformation userInformation;
 
     @ManyToMany
@@ -52,12 +53,12 @@ public class Users implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Roles> roles;
+    private Set<Roles> roles = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Rooms room;
 
-    @OneToMany(mappedBy = "")
+    @OneToMany(mappedBy = "user")
     private Set<Orders> orders;
 }
