@@ -1,11 +1,12 @@
-#FROM maven as build
-#WORKDIR /app
-#COPY . .
-#RUN mvn install
-
-FROM openjdk:8-jre
+FROM eclipse-temurin:8-jdk-alpine as builder
 WORKDIR /app
-#COPY --from=build /app/target/*.jar /app/
-COPY target/*.jar /app/
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+COPY ./src ./src
+RUN ./mvnw clean install -Dmaven.test.skip=true
+
+FROM eclipse-temurin:8-jre-alpine
+WORKDIR /app
 EXPOSE 9090
-CMD ["java", "-jar", "apartment-online-market-0.0.1-SNAPSHOT.jar"]
+COPY --from=builder /app/target/*.jar /app/*.jar
+CMD ["java", "-jar", "/app/*.jar"]

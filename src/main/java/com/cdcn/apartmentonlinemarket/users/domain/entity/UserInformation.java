@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -30,9 +31,9 @@ public class UserInformation extends BaseEntity implements Serializable {
 
     private String firstName;
     private String lastName;
-    private Timestamp lastLogin;
-    private Boolean mustChangePass;
-    private Timestamp passChangeAt;
+    private Instant lastLogin;
+    private Boolean mustChangePass = false;
+    private Instant passChangeAt;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

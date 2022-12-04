@@ -11,5 +11,5 @@ spring:
 application:
     security:
         authentication:
-            access-token-validity-in-seconds: 360
-            refresh-token-validity-in-seconds: 1800
+            access-token-validity-in-seconds: 900
+            refresh-token-validity-in-seconds: 3600
