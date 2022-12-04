@@ -1,7 +1,6 @@
 package com.cdcn.apartmentonlinemarket.products.domain.entity;
 
 import com.cdcn.apartmentonlinemarket.common.enums.Color;
-import com.cdcn.apartmentonlinemarket.products.domain.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
