@@ -18,8 +18,8 @@ public class CORSFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) servletRequest;
-        HttpServletRequest request = (HttpServletRequest) servletResponse;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
         final String origin = request.getHeader("Origin");
 
         if (ofNullable(origin).isPresent()) {
