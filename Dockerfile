@@ -3,7 +3,7 @@ WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 COPY ./src ./src
-RUN ./mvnw clean install -Dmaven.test.skip=true
+RUN ./mvnw clean install
 
 FROM eclipse-temurin:8-jre-alpine
 WORKDIR /app
