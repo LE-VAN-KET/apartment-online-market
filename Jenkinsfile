@@ -89,7 +89,7 @@ pipeline{
                     """
 
                     echo "Login into server restart container"
-                    sh "scp -i ~/.ssh/id_rsa_ggcloud -r deploy.sh khanhdpdx@34.142.222.244:/root"
+                    sh "scp -i ~/.ssh/id_rsa_ggcloud -r deploy.sh khanhdpdx@34.142.222.244:/home/khanhdpdx"
                     sh "ssh -i ~/.ssh/id_rsa_ggcloud khanhdpdx@34.142.222.244 ./deploy.sh"
 
                     echo "Exit remote server"
