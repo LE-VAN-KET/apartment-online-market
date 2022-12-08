@@ -52,9 +52,7 @@ public class CategoryMapper extends BaseMapper<Category, CategoryDTO> {
 		category.setSlug(dto.getSlug());
 		if (dto.getParent_id()!=null) {
 			Optional<Category> category_parent = repository.findById(dto.getParent_id());
-			if (!category_parent.isEmpty()) {
-				category.setParent(category_parent.get());
-			}
+			category_parent.ifPresent(category::setParent);
 		}
 
 		return category;
