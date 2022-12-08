@@ -25,7 +25,7 @@ public class StoreServiceImpl implements StoreService{
 	@Override
 	public Store getStoreById(UUID id) {
 		Optional<Store> store = storeRepository.findById(id);
-		return store.isEmpty()?null:store.get();
+		return store.orElse(null);
 	}
 
 	@Override
