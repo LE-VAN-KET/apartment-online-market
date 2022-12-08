@@ -71,9 +71,7 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		if (dto.getCategory_id()!=null) {
 			try {
 				Optional<Category> category = categoryRepository.findById(dto.getCategory_id());
-				if (category.isPresent()) {
-					p.setCategory(category.get());
-				}
+				category.ifPresent(p::setCategory);
 			}
 			catch (Exception e) {	
 			}
@@ -81,9 +79,7 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		if (dto.getStore_id()!=null) {
 			try {
 				Optional<Store> store = storeRepository.findById(dto.getStore_id());
-				if (store.isPresent()) {
-					p.setStore(store.get());
-				}
+				store.ifPresent(p::setStore);
 			}
 			catch (Exception e) {	
 			}
