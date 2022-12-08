@@ -1,6 +1,7 @@
 package com.cdcn.apartmentonlinemarket.products.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category getCategoryById(Long id) {
 		Optional<Category> category = categoryRepository.findById(id);
-		return category.isEmpty()?null:category.get();
+		return category.orElse(null);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		catch (Exception e) {
 		}
-		return categories.isEmpty()?null:categories;
+		return categories.isEmpty() ? Collections.emptyList() : categories;
 
 	}
 
@@ -50,8 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
 		catch (Exception e) {	
 		}
 		return mapper.convertToDto(category);
-		}
-
-
+	}
 
 }
