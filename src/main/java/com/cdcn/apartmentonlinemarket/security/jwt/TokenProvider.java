@@ -13,10 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
@@ -119,6 +121,12 @@ public class TokenProvider {
         String fullName = claims.get(TokenKey.FULL_NAME, String.class);
         String subId = claims.get(TokenKey.SUB_ID, String.class);
         return new CustomUserPrincipal(subject, subId, fullName, tokenType, auth, authorities);
+    }
+
+    public String getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        return principal.getSubId();
     }
 
 }
