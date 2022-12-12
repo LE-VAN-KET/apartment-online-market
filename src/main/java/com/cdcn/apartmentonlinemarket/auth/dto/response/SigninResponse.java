@@ -3,6 +3,7 @@ package com.cdcn.apartmentonlinemarket.auth.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -14,4 +15,5 @@ public class SigninResponse {
     private Long expiresIn;
     private String refreshToken;
     private Long refreshExpiresIn;
+    private List<String> roles;
 }

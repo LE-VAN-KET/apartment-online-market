@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -122,7 +124,7 @@ public class GlobalHandleException {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class})
     protected ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
         return handleNotFoundException(ex, "UserNotFoundException");
     }
@@ -143,6 +145,26 @@ public class GlobalHandleException {
     @ExceptionHandler(RoleNotFoundException.class)
     protected ErrorResponse handleRoleNotFoundException(RoleNotFoundException ex) {
         return handleNotFoundException(ex, "RoleNotFoundException");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({ProductNotFoundException.class, InventoryNotFoundException.class,
+            CartItemNotFoundException.class, CartNotFoundException.class})
+    protected ErrorResponse handleProductNotFoundException(Exception ex) {
+        return handleNotFoundException(ex, "NotFoundException");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
+        this.addErrorLog(HttpStatus.FORBIDDEN, ex.getMessage(), "AccessDeniedException");
+        return new ErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ProductNotEnoughException.class})
+    protected ErrorResponse handleProductNotEnoughException(ProductNotEnoughException ex) {
+        return handleBadRequestException(ex, "ProductNotEnoughException");
     }
 
 }

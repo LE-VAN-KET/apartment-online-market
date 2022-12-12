@@ -24,11 +24,14 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,11 +79,14 @@ public class AuthServiceImpl implements AuthService{
                     request.getPassword());
             Authentication authentication = authenticationManager.authenticate(authToken);
             TokenPair tokenPair = createAndSaveToken(authentication);
+            List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
             return SigninResponse.builder()
                     .accessToken(tokenPair.getAccessToken())
                     .expiresIn(tokenProperties.getAccessTokenValidityInSeconds())
                     .refreshToken(tokenPair.getRefreshToken())
                     .refreshExpiresIn(tokenProperties.getRefreshTokenValidityInSeconds())
+                    .roles(roles)
                     .tokenType("Bearer").build();
         } catch (UserNotFoundException exception) {
             throw new UserNotFoundException(exception.getMessage());

@@ -1,6 +1,10 @@
 pipeline{
     agent any
 
+    environment {
+        dockerhub=credentials('docker-secret-vanket')
+    }
+
     stages{
         stage('Prepare workspace') {
             steps {
@@ -80,7 +84,7 @@ pipeline{
                 echo "========Build And Push image to test environment========"
                 script {
                     sh "docker build -t vanket/apartment-online-market:latest ."
-                    sh "docker login -u vanket -p dckr_pat_V1ZSZ0lJu4IESrxEJz_45ClFc60"
+                    sh "echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin"
                     sh "docker tag vanket/apartment-online-market:latest vanket/apartment-online-market:1.0.0"
                     sh "docker push vanket/apartment-online-market:1.0.0"
 
@@ -89,8 +93,8 @@ pipeline{
                     """
 
                     echo "Login into server restart container"
-                    sh "scp -i ~/.ssh/id_rsa_ggcloud -r deploy.sh khanhdpdx@34.142.222.244:/home/khanhdpdx"
-                    sh "ssh -i ~/.ssh/id_rsa_ggcloud khanhdpdx@34.142.222.244 ./deploy.sh"
+                    sh "scp -i ~/.ssh/id_rsa_ggcloud -r deploy.sh khanhdpdx@34.143.194.243:/home/khanhdpdx"
+                    sh "ssh -i ~/.ssh/id_rsa_ggcloud khanhdpdx@34.143.194.243 ./deploy.sh"
 
                     echo "Exit remote server"
                 }
