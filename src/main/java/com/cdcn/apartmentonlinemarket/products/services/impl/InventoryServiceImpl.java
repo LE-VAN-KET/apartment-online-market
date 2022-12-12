@@ -17,12 +17,12 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
 
     @Override
-    @Transactional
     public void create(Inventory inventory) {
         inventoryRepository.save(inventory);
     }
 
     @Override
+    @Transactional
     public void add(Product product) {
         Inventory inventory = new Inventory();
         inventory.setSkuCode(product.getId());
