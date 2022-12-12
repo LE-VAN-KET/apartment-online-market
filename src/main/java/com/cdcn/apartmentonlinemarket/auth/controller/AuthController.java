@@ -1,15 +1,15 @@
 package com.cdcn.apartmentonlinemarket.auth.controller;
 
+import com.cdcn.apartmentonlinemarket.auth.dto.request.RefreshTokenRequest;
 import com.cdcn.apartmentonlinemarket.auth.dto.request.SigninRequest;
 import com.cdcn.apartmentonlinemarket.auth.dto.request.SignupCommand;
 import com.cdcn.apartmentonlinemarket.auth.dto.response.SigninResponse;
 import com.cdcn.apartmentonlinemarket.auth.dto.response.SignupResponse;
 import com.cdcn.apartmentonlinemarket.auth.service.AuthService;
+import com.cdcn.apartmentonlinemarket.security.model.TokenPair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,6 +32,11 @@ public class AuthController {
     @PostMapping("/signup/seller")
     public SignupResponse signUpSeller(@Valid @RequestBody SignupCommand command) {
         return authService.signUpSeller(command);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokenPair> refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 
 }
