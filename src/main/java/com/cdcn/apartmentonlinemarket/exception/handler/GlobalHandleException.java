@@ -167,4 +167,10 @@ public class GlobalHandleException {
         return handleBadRequestException(ex, "ProductNotEnoughException");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({InvalidRefreshTokenException.class})
+    protected ErrorResponse handleInvalidRefreshTokenException(InvalidRefreshTokenException ex) {
+        return handleBadRequestException(ex, "InvalidRefreshTokenException");
+    }
+
 }

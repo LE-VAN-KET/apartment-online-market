@@ -1,6 +1,7 @@
 package com.cdcn.apartmentonlinemarket.auth.service;
 
 import com.cdcn.apartmentonlinemarket.auth.dto.mapper.UserMapper;
+import com.cdcn.apartmentonlinemarket.auth.dto.request.RefreshTokenRequest;
 import com.cdcn.apartmentonlinemarket.auth.dto.request.SigninRequest;
 import com.cdcn.apartmentonlinemarket.auth.dto.request.SignupCommand;
 import com.cdcn.apartmentonlinemarket.auth.dto.response.SigninResponse;
@@ -10,6 +11,7 @@ import com.cdcn.apartmentonlinemarket.configuration.properties.TokenProperties;
 import com.cdcn.apartmentonlinemarket.exception.*;
 import com.cdcn.apartmentonlinemarket.infrastructure.repository.RedisTokenRepository;
 import com.cdcn.apartmentonlinemarket.security.jwt.TokenCreator;
+import com.cdcn.apartmentonlinemarket.security.jwt.TokenProvider;
 import com.cdcn.apartmentonlinemarket.security.model.TokenPair;
 import com.cdcn.apartmentonlinemarket.users.domain.entity.Roles;
 import com.cdcn.apartmentonlinemarket.users.domain.entity.UserInformation;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +48,7 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final TokenProperties tokenProperties;
     private final RoleRepository roleRepository;
+    private final TokenProvider tokenProvider;
 
     @Override
     @Transactional
@@ -97,9 +101,27 @@ public class AuthServiceImpl implements AuthService{
         }
     }
 
+    @Override
+    public TokenPair refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        var refreshToken = refreshTokenRequest.getToken().trim();
+        tokenProvider.validateToken(refreshToken);
+        Authentication authentication = tokenProvider.parseAuthentication(refreshToken);
+        TokenPair currentTokenPair = redisTokenRepository.read(authentication.getName());
+
+        if (currentTokenPair == null || !Objects.equals(refreshToken, currentTokenPair.getRefreshToken()))
+            throw new InvalidRefreshTokenException(400, "Invalid refresh token!");
+        return createAndUpdateToken(authentication);
+    }
+
     private TokenPair createAndSaveToken(Authentication authentication) {
         TokenPair tokenPair = tokenCreator.createTokenPair(authentication);
         redisTokenRepository.save(authentication.getName(), tokenPair);
+        return tokenPair;
+    }
+
+    private TokenPair createAndUpdateToken(Authentication authentication) {
+        TokenPair tokenPair = tokenCreator.createTokenPair(authentication);
+        redisTokenRepository.update(authentication.getName(), tokenPair);
         return tokenPair;
     }
 
