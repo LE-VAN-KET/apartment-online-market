@@ -1,10 +1,6 @@
 package com.cdcn.apartmentonlinemarket.products.services.impl;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.cdcn.apartmentonlinemarket.exception.ProductNotEnoughException;
 import com.cdcn.apartmentonlinemarket.helpers.pagination.PageRequestBuilder;
@@ -44,13 +40,9 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public List<ProductDTO> getAllProducts() {
-		List<ProductDTO> products = new ArrayList<>();
-		try {
-			products = productMapper.convertToDtoList(productRepository.findAll());
-		}
-		catch (Exception e) {
-		}
-	    return products.isEmpty()?null:products;
+		List<Product> productList = productRepository.findAll();
+	    return productList.isEmpty() ? Collections.emptyList() :
+				productMapper.convertToDtoList(productList);
 	}
 
 	@Override

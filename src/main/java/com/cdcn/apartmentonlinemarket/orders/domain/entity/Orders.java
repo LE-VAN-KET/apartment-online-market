@@ -6,6 +6,7 @@ import com.cdcn.apartmentonlinemarket.users.domain.entity.Users;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -43,5 +44,9 @@ public class Orders extends BaseEntity {
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 //    @JoinColumn(name = "order_id", nullable = false)
 //    private Set<OrderItem> orderItems;
+
+    public String generateReference(int length) {
+        return RandomStringUtils.randomAlphanumeric(length);
+    }
 
 }
