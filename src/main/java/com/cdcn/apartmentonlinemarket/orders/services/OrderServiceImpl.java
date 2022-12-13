@@ -79,6 +79,7 @@ public class OrderServiceImpl implements OrderService{
 
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
         cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.HOUR, 7);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         //Add Params of 2.1.0 Version
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
