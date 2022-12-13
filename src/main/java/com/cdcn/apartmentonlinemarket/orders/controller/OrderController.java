@@ -20,16 +20,16 @@ public class OrderController {
     }
 
     @PostMapping("{order_reference}")
-    public Response checkout(@PathVariable String order_reference) throws JSONException, UnsupportedEncodingException {
+    public Response checkout(@PathVariable String order_reference) throws  UnsupportedEncodingException {
         return orderService.checkout(order_reference);
     }
     @GetMapping("ipn")
-    public Response IPN(IPNRequest data) throws JSONException, UnsupportedEncodingException {
+    public Response IPN(IPNRequest data) throws UnsupportedEncodingException {
         return orderService.IPN(data);
     }
 
     @GetMapping("return")
-    public Response ReturnUrl(IPNRequest data) throws JSONException, UnsupportedEncodingException {
+    public Response ReturnUrl(IPNRequest data) throws UnsupportedEncodingException {
         return orderService.Success(data);
     }
 }
