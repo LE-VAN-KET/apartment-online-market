@@ -48,9 +48,11 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		dto.setName(entity.getName());
 		dto.setPrice(entity.getPrice());
 		dto.setQuantity(entity.getQuantity());
+
 		if (entity.getImages() != null && !entity.getImages().isEmpty()) {
 			dto.setImagesList(Arrays.asList(entity.getImages().split(";")));
 		}
+
 		if (entity.getSaleDate()!=null) {
 			dto.setSaleDate(entity.getSaleDate());
 		}
