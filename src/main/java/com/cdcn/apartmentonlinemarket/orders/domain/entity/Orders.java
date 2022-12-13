@@ -39,9 +39,9 @@ public class Orders extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users user;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Set<OrderItem> orderItems;
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "order_id", nullable = false)
+//    private Set<OrderItem> orderItems;
 
 }
