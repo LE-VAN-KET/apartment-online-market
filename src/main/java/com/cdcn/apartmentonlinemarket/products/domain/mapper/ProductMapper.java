@@ -1,9 +1,7 @@
 package com.cdcn.apartmentonlinemarket.products.domain.mapper;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import com.cdcn.apartmentonlinemarket.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.cdcn.apartmentonlinemarket.infrastructure.domain.mapper.BaseMapper;
@@ -50,6 +48,7 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		dto.setName(entity.getName());
 		dto.setPrice(entity.getPrice());
 		dto.setQuantity(entity.getQuantity());
+		dto.setImagesList(Arrays.asList(entity.getImages().split(";")));
 		if (entity.getSaleDate()!=null) {
 			dto.setSaleDate(entity.getSaleDate());
 		}
@@ -69,12 +68,9 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		p.setQuantity(dto.getQuantity());
 		p.setSaleDate(dto.getSaleDate());
 		if (dto.getCategory_id()!=null) {
-			try {
-				Optional<Category> category = categoryRepository.findById(dto.getCategory_id());
-				category.ifPresent(p::setCategory);
-			}
-			catch (Exception e) {	
-			}
+			Category category = categoryRepository.findById(dto.getCategory_id()).orElseThrow(() ->
+					new CategoryNotFoundException(404, "Category not found with id!"));
+			p.setCategory(category);
 		}
 		if (dto.getStore_id()!=null) {
 			try {

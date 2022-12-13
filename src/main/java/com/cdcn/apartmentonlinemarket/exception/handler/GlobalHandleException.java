@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolation;
@@ -149,7 +150,7 @@ public class GlobalHandleException {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ProductNotFoundException.class, InventoryNotFoundException.class,
-            CartItemNotFoundException.class, CartNotFoundException.class})
+            CartItemNotFoundException.class, CartNotFoundException.class, CategoryNotFoundException.class})
     protected ErrorResponse handleProductNotFoundException(Exception ex) {
         return handleNotFoundException(ex, "NotFoundException");
     }
@@ -171,6 +172,13 @@ public class GlobalHandleException {
     @ExceptionHandler({InvalidRefreshTokenException.class})
     protected ErrorResponse handleInvalidRefreshTokenException(InvalidRefreshTokenException ex) {
         return handleBadRequestException(ex, "InvalidRefreshTokenException");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return ResponseEntity
+                .status(HttpStatus.EXPECTATION_FAILED)
+                .body(new ErrorResponse(417, "One or more files are too large!"));
     }
 
 }

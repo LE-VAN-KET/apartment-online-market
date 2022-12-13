@@ -31,13 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<CategoryDTO> getAllCategory() {
-		List<CategoryDTO> categories = new ArrayList<>();
-		try {
-			categories = mapper.convertToDtoList(categoryRepository.findAll());
-		}
-		catch (Exception e) {
-		}
-		return categories.isEmpty() ? Collections.emptyList() : categories;
+		List<Category> categoryList = categoryRepository.findAll();
+
+		return categoryList.isEmpty() ? Collections.emptyList() : mapper.convertToDtoList(categoryList);
 
 	}
 
