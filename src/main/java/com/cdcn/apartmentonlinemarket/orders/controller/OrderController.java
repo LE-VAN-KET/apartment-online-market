@@ -4,8 +4,6 @@ import com.cdcn.apartmentonlinemarket.orders.model.IPNRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.Response;
 import com.cdcn.apartmentonlinemarket.orders.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -32,4 +30,7 @@ public class OrderController {
     public Response ReturnUrl(IPNRequest data) throws UnsupportedEncodingException {
         return orderService.Success(data);
     }
+
+
+
 }

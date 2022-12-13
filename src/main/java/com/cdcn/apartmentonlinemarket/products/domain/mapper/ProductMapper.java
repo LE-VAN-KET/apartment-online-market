@@ -48,7 +48,9 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 		dto.setName(entity.getName());
 		dto.setPrice(entity.getPrice());
 		dto.setQuantity(entity.getQuantity());
-		dto.setImagesList(Arrays.asList(entity.getImages().split(";")));
+		if (entity.getImages() != null && !entity.getImages().isEmpty()) {
+			dto.setImagesList(Arrays.asList(entity.getImages().split(";")));
+		}
 		if (entity.getSaleDate()!=null) {
 			dto.setSaleDate(entity.getSaleDate());
 		}
@@ -73,12 +75,8 @@ public class ProductMapper extends BaseMapper<Product, ProductDTO>{
 			p.setCategory(category);
 		}
 		if (dto.getStore_id()!=null) {
-			try {
-				Optional<Store> store = storeRepository.findById(dto.getStore_id());
-				store.ifPresent(p::setStore);
-			}
-			catch (Exception e) {	
-			}
+			Optional<Store> store = storeRepository.findById(dto.getStore_id());
+			store.ifPresent(p::setStore);
 		}
 		if (dto.getTag_ids()!=null) {
 			List<Tag> tags = tagRepository.findAllById(dto.getTag_ids());

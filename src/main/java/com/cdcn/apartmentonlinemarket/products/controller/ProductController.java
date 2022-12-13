@@ -35,8 +35,8 @@ public class ProductController {
 		return p;
 	}
 
-	@PostMapping("/products/filter")
-	public PageResponse<ProductDTO> filter(@RequestBody SearchProductRequest request) {
+	@GetMapping("/products/filter")
+	public PageResponse<ProductDTO> filter(SearchProductRequest request) {
 		return productService.filter(request);
 	}
 
