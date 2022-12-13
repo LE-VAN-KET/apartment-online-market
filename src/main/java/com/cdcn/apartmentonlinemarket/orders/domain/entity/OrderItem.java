@@ -23,6 +23,8 @@ public class OrderItem {
     )
     @Column(columnDefinition = "BINARY(16)")
     private UUID orderItemId;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID orderId;
 
     @Column(columnDefinition = "BINARY(16)")
     private UUID productId;
