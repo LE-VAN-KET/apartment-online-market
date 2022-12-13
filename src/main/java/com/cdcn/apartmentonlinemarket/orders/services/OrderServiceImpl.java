@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     @Override
-    public Response checkout(String order_reference) throws JSONException, UnsupportedEncodingException {
+    public Response checkout(String order_reference) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_OrderInfo = order_reference;
@@ -117,7 +117,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Response IPN(IPNRequest data) throws JSONException, UnsupportedEncodingException {
+    public Response IPN(IPNRequest data) throws UnsupportedEncodingException {
         Response job = new Response();
         try
         {
@@ -228,7 +228,7 @@ public class OrderServiceImpl implements OrderService{
             return job;
         }
     }
-    public Response Success(IPNRequest data) throws JSONException {
+    public Response Success(IPNRequest data) throws UnsupportedEncodingException {
         Response job = new Response();
         try {
             OrderResponse order = orderRepository.findByReference(data.getVnp_TxnRef());
