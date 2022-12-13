@@ -27,4 +27,9 @@ public class OrderController {
     public Response IPN(IPNRequest data) throws JSONException, UnsupportedEncodingException {
         return orderService.IPN(data);
     }
+
+    @GetMapping("return")
+    public Response ReturnUrl(IPNRequest data) throws JSONException, UnsupportedEncodingException {
+        return orderService.Success(data);
+    }
 }

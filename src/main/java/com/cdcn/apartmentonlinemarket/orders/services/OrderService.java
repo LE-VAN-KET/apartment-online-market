@@ -12,4 +12,5 @@ import java.io.UnsupportedEncodingException;
 public interface OrderService {
     Response checkout(String order_reference) throws JSONException, UnsupportedEncodingException;
     Response IPN(IPNRequest data) throws JSONException, UnsupportedEncodingException;
+    Response Success(IPNRequest data) throws JSONException, UnsupportedEncodingException;
 }

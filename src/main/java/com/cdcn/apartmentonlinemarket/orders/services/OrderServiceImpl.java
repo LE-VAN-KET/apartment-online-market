@@ -130,6 +130,12 @@ public class OrderServiceImpl implements OrderService{
             }
 //            OrderResponse order = exist.get();
             Optional<Orders> dbOrderCheck = orderRepository.findById(order.getId());
+            if (!dbOrderCheck.isPresent())
+            {
+                job.setRspCode("01");
+                job.setMessage("Order not Found");
+                return job;
+            }
             Orders dbOrder = dbOrderCheck.get();
             //Begin process return from VNPAY
             Map fields = new HashMap();
@@ -161,63 +167,50 @@ public class OrderServiceImpl implements OrderService{
             String signValue = Config.hashAllFields(fields);
             if (signValue.equals(vnp_SecureHash))
             {
-                    /// 4300000
-                String a = String.valueOf(order.getTotalAmount().multiply(new BigDecimal(100)).longValue());
-                boolean checkOrderId = true; // vnp_TxnRef exists in your database
                 boolean checkAmount = data.getVnp_Amount().equals(String.valueOf(order.getTotalAmount().multiply(new BigDecimal(100)).longValue()));
                 boolean checkOrderStatus = order.getOrderStatus().getValue() == 0;
-
-                if(checkOrderId)
+                if(checkAmount)
                 {
-                    if(checkAmount)
+                    if (checkOrderStatus)
                     {
-                        if (checkOrderStatus)
+                        Payment payment = new Payment();
+                        payment.setType(PaymentMethod.CREDIT_CARDS);
+                        payment.setOrderId(order.getId());
+                        payment.setTotalAmount(order.getTotalAmount());
+                        payment.setDetails(JSONSerializer.serializeObject(data));
+                        payment.setReference(Config.generateReference(15));
+                        payment.setCurrentCode("VND");
+                        payment.setCreatedDate(OffsetDateTime.now());
+                        if ("00".equals(data.getVnp_ResponseCode()))
                         {
-                            Payment payment = new Payment();
-                            payment.setType(PaymentMethod.CREDIT_CARDS);
-                            payment.setOrderId(order.getId());
-                            payment.setTotalAmount(order.getTotalAmount());
-                            payment.setDetails(JSONSerializer.serializeObject(data));
-                            payment.setReference(Config.generateReference(15));
-                            payment.setCurrentCode("VND");
-                            payment.setCreatedDate(OffsetDateTime.now());
-                            if ("00".equals(data.getVnp_ResponseCode()))
-                            {
-                                dbOrder.setOrderStatus(OrderStatus.COMPLETED);
-                                payment.setStatus(PaymentStatus.SUCCESS);
-                            } else if (data.getVnp_ResponseCode() == "24"){
-                                dbOrder.setOrderStatus(OrderStatus.CANCELED);
-                                payment.setStatus(PaymentStatus.FAILED);
-                            }
-                            else
-                            {
-                                dbOrder.setOrderStatus(OrderStatus.FAILED);
-                                payment.setStatus(PaymentStatus.FAILED);
-                            }
-                            orderRepository.save(dbOrder);
-                            paymentRepository.save(payment);
-                            job.setRspCode("00");
-                            job.setMessage("Confirm Success");
-                            return job;
+                            dbOrder.setOrderStatus(OrderStatus.COMPLETED);
+                            payment.setStatus(PaymentStatus.SUCCESS);
+                        } else if (data.getVnp_ResponseCode().equals("24")){
+                            dbOrder.setOrderStatus(OrderStatus.CANCELED);
+                            payment.setStatus(PaymentStatus.FAILED);
                         }
                         else
                         {
-                            job.setRspCode("02");
-                            job.setMessage("Order already confirmed");
-                            return job;
+                            dbOrder.setOrderStatus(OrderStatus.FAILED);
+                            payment.setStatus(PaymentStatus.FAILED);
                         }
+                        orderRepository.save(dbOrder);
+                        paymentRepository.save(payment);
+                        job.setRspCode("00");
+                        job.setMessage("Confirm Success");
+                        return job;
                     }
                     else
                     {
-                        job.setRspCode("04");
-                        job.setMessage("Invalid Amount");
+                        job.setRspCode("02");
+                        job.setMessage("Order already confirmed");
                         return job;
                     }
                 }
                 else
                 {
-                    job.setRspCode("01");
-                    job.setMessage("Order not Found");
+                    job.setRspCode("04");
+                    job.setMessage("Invalid Amount");
                     return job;
                 }
             }
@@ -235,98 +228,87 @@ public class OrderServiceImpl implements OrderService{
             return job;
         }
     }
-//    public JSONObject Success(IPNRequest data) throws JSONException {
-//        JSONObject job = new JSONObject();
-//        try
-//        {
-//            Optional<OrderResponse exist = orderRepository.findByReference(data.getVnp_TxnRef());
-//            if(!exist.isPresent())
-//            {
-//                job.put("RspCode", "01");
-//                job.put("Message", "Order not Found");
-//                return job;
-//            }
+    public Response Success(IPNRequest data) throws JSONException {
+        Response job = new Response();
+        try {
+            OrderResponse order = orderRepository.findByReference(data.getVnp_TxnRef());
+            if (order.getId() == null) {
+                job.setRspCode("01");
+                job.setMessage("Order not Found");
+                return job;
+            }
 //            OrderResponse order = exist.get();
-//            Optional<Orders> dbOrderCheck = orderRepository.findById(order.getId());
-//            Orders dbOrder = dbOrderCheck.get();
-//            //Begin process return from VNPAY
-//            Map fields = new HashMap();
-//            fields.put("vnp_TmnCode", data.getVnp_TmnCode());
-//            fields.put("vnp_Amount", data.getVnp_Amount());
-//            fields.put("vnp_BankCode", data.getVnp_BankCode());
-//            fields.put("vnp_BankTranNo", data.getVnp_BankTranNo());
-//            fields.put("vnp_CardType", data.getVnp_CardType());
-//            fields.put("vnp_PayDate", data.getVnp_PayDate());
-//            fields.put("vnp_OrderInfo", data.getVnp_OrderInfo());
-//            fields.put("vnp_TransactionNo", data.getVnp_TransactionNo());
-//            fields.put("vnp_ResponseCode", data.getVnp_ResponseCode());
-//            fields.put("vnp_TransactionStatus", data.getVnp_TransactionStatus());
-//            fields.put("vnp_TxnRef", data.getVnp_TxnRef());
-//            fields.put("vnp_SecureHashType", data.getVnp_SecureHashType());
-//            fields.put("vnp_SecureHash", data.getVnp_SecureHash());
-//
-//            String vnp_SecureHash = data.getVnp_SecureHash();
-//            if (fields.containsKey("vnp_SecureHashType"))
-//            {
-//                fields.remove("vnp_SecureHashType");
-//            }
-//            if (fields.containsKey("vnp_SecureHash"))
-//            {
-//                fields.remove("vnp_SecureHash");
-//            }
-//
-//            // Check checksum
-//            String signValue = Config.hashAllFields(fields);
-//            if (signValue.equals(vnp_SecureHash))
-//            {
-//
-//                boolean checkOrderId = true; // vnp_TxnRef exists in your database
-//                boolean checkAmount = data.getVnp_Amount() == Integer.parseInt(order.getTotalAmount().toString()) * 100;
-//                boolean checkOrderStatus = order.getOrderStatus().getValue() == 0;
-//
-//                if(checkOrderId)
-//                {
-//                    if(checkAmount)
-//                    {
-//                        if (checkOrderStatus)
-//                        {
-//                            job.put("RspCode", "00");
-//                            job.put("Message", "Confirm Success");
-//                            return job;
-//                        }
-//                        else
-//                        {
-//                            job.put("RspCode", "02");
-//                            job.put("Message", "Order already confirmed");
-//                            return job;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        job.put("RspCode", "04");
-//                        job.put("Message", "Invalid Amount");
-//                        return job;
-//                    }
-//                }
-//                else
-//                {
-//                    job.put("RspCode", "01");
-//                    job.put("Message", "Order not Found");
-//                    return job;
-//                }
-//            }
-//            else
-//            {
-//                job.put("RspCode", "97");
-//                job.put("Message", "Invalid Checksum");
-//                return job;
-//            }
-//        }
-//        catch(Exception e)
-//        {
-//            job.put("RspCode", "99");
-//            job.put("Message", "Unknow error");
-//            return job;
-//        }
-//    }
+            Optional<Orders> dbOrderCheck = orderRepository.findById(order.getId());
+            if (!dbOrderCheck.isPresent()) {
+                job.setRspCode("01");
+                job.setMessage("Order not Found");
+                return job;
+            }
+            Orders dbOrder = dbOrderCheck.get();
+            //Begin process return from VNPAY
+            Map fields = new HashMap();
+            fields.put("vnp_TmnCode", data.getVnp_TmnCode());
+            fields.put("vnp_Amount", data.getVnp_Amount());
+            fields.put("vnp_BankCode", data.getVnp_BankCode());
+            fields.put("vnp_BankTranNo", data.getVnp_BankTranNo());
+            fields.put("vnp_CardType", data.getVnp_CardType());
+            fields.put("vnp_PayDate", data.getVnp_PayDate());
+            fields.put("vnp_OrderInfo", data.getVnp_OrderInfo());
+            fields.put("vnp_TransactionNo", data.getVnp_TransactionNo());
+            fields.put("vnp_ResponseCode", data.getVnp_ResponseCode());
+            fields.put("vnp_TransactionStatus", data.getVnp_TransactionStatus());
+            fields.put("vnp_TxnRef", data.getVnp_TxnRef());
+            fields.put("vnp_SecureHashType", data.getVnp_SecureHashType());
+            fields.put("vnp_SecureHash", data.getVnp_SecureHash());
+
+            String vnp_SecureHash = data.getVnp_SecureHash();
+            if (fields.containsKey("vnp_SecureHashType")) {
+                fields.remove("vnp_SecureHashType");
+            }
+            if (fields.containsKey("vnp_SecureHash")) {
+                fields.remove("vnp_SecureHash");
+            }
+
+            // Check checksum
+            String signValue = Config.hashAllFields(fields);
+            if (signValue.equals(vnp_SecureHash)) {
+                boolean checkAmount = data.getVnp_Amount().equals(String.valueOf(order.getTotalAmount().multiply(new BigDecimal(100)).longValue()));
+                boolean checkOrderStatus = order.getOrderStatus().getValue() == 0;
+
+                if (checkAmount) {
+                    if (checkOrderStatus) {
+                    if ("00".equals(data.getVnp_ResponseCode())) {
+                        job.setRspCode("00");
+                        job.setMessage("Confirm Success");
+                        return job;
+                    } else if (data.getVnp_ResponseCode().equals("24")) {
+                        job.setRspCode("24");
+                        job.setMessage("Cancel Order");
+                        return job;
+                    } else {
+                        job.setRspCode("01");
+                        job.setMessage("Payment fail");
+                        return job;
+                    }
+                    } else {
+                        job.setRspCode("02");
+                        job.setMessage("Order already confirmed");
+                        return job;
+                    }
+                } else {
+                    job.setRspCode("04");
+                    job.setMessage("Invalid Amount");
+                    return job;
+                }
+            } else {
+                job.setRspCode("97");
+                job.setMessage("Invalid Checksum");
+                return job;
+            }
+        } catch (Exception e) {
+            job.setRspCode("99");
+            job.setMessage("Unknow error");
+            return job;
+        }
+    }
 }
