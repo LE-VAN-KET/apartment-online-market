@@ -30,7 +30,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = true)
     private Category parent;
 }

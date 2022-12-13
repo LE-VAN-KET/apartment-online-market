@@ -26,6 +26,10 @@ spring:
         connection-minimum-idle-size: 2
         token-prefix: project-management:token
         token-time-to-live: 1800
+    servlet:
+        multipart:
+            max-file-size: 500KB
+            max-request-size: 500KB
 
 keystore:
     password: team92pass

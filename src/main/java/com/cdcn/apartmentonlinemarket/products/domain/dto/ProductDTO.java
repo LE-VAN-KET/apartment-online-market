@@ -1,10 +1,14 @@
 package com.cdcn.apartmentonlinemarket.products.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
 	private UUID id;
 	private String name;
@@ -17,6 +21,8 @@ public class ProductDTO {
 	private UUID store_id;
 	private Long category_id;
 	private List<Long> tag_ids;
+
+	private transient List<String> imagesList;
 
 	 public ProductDTO() {
 		super();
@@ -126,6 +132,11 @@ public class ProductDTO {
 		this.tag_ids = tag_ids;
 	}
 
+	public void setImagesList(List<String> imagesList) {
+		this.imagesList = imagesList;
+	}
 
-
+	public List<String> getImagesList() {
+		return imagesList;
+	}
 }

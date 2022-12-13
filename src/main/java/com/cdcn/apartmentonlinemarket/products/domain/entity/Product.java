@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,4 +55,6 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags;
+
+    private String images;
 }
