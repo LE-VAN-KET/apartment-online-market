@@ -1,4 +1,4 @@
-# Ecommerce: Apartment Building Online Market
+# 19N11-TEAM15-Ecommerce: Apartment Building Online Market
 ### Description brief:
 <p>People who live in apartment buildings in large cities are quite accustomed to using forums 
 or groups that the building administration or themselves have formed for everyone to post 
@@ -26,7 +26,7 @@ seamless end-to-end service</p>
 - [x] [Maven](https://maven.apache.org/install.html)
 ### Start Application step by steps:
   * <h4>Open a terminal and inside **apartment-online-market** folder run:</h4>
-    * <code>docker compose -f docker-compose.yaml up db_market redis logstash  -d</code>
+    * <code>docker compose -f docker-compose.yaml up db_market redis -d</code>
     * <h5>After that:</h5>
     * <code>mvn clean install</code>
     * <h5>Finally:<h5>
