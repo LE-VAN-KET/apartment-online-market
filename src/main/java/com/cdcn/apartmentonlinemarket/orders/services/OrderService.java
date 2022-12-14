@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 
 public interface OrderService {
-    Response checkout(String order_reference) throws UnsupportedEncodingException;
+    Response checkout(String order_reference, String return_url) throws UnsupportedEncodingException;
     Response IPN(IPNRequest data) throws UnsupportedEncodingException;
     Response Success(IPNRequest data) throws UnsupportedEncodingException;
     CreateOrderResponse createOrder(CreateOrderRequest request);

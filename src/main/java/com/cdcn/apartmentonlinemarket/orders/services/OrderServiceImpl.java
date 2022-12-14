@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService{
     private final InventoryService inventoryService;
 
     @Override
-    public Response checkout(String order_reference) throws UnsupportedEncodingException {
+    public Response checkout(String order_reference, String return_url) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_OrderInfo = order_reference;
@@ -95,7 +95,7 @@ public class OrderServiceImpl implements OrderService{
         } else {
             vnp_Params.put("vnp_Locale", "vn");
         }
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_Returnurl);
+        vnp_Params.put("vnp_ReturnUrl", return_url);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
 

@@ -1,6 +1,6 @@
 package com.cdcn.apartmentonlinemarket.helpers.response;
 
-import jdk.nashorn.internal.objects.annotations.Setter;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
