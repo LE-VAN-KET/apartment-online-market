@@ -9,15 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends IJpaRepository<Orders, UUID> {
-    @Query("select NEW com.cdcn.apartmentonlinemarket.orders.model.OrderResponse(order.id, order.reference, sum(oi.quantity * oi.price), order.orderStatus, order.expiredAt) from Orders order LEFT JOIN OrderItem oi ON order.id = oi.orderId where order.reference = :reference")
+    @Query("select NEW com.cdcn.apartmentonlinemarket.orders.model.OrderResponse(order.id, order.reference, sum(oi.quantity * oi.price), order.orderStatus) from Orders order LEFT JOIN OrderItem oi ON order.id = oi.orderId where order.reference = :reference")
     OrderResponse findByReference(@Param("reference") String reference);
 
-    @Modifying
-    @Query("update Orders o set o.orderStatus = :status where o.expiredAt < :timeNow")
-    void cancelOrderExpired(@Param("status")OrderStatus status, @Param("timeNow") Instant timeNow);
+//    @Modifying
+//    @Query("update Orders o set o.orderStatus = :status where o.expiredAt < :timeNow")
+//    void cancelOrderExpired(@Param("status")OrderStatus status, @Param("timeNow") Timestamp timeNow);
 }
