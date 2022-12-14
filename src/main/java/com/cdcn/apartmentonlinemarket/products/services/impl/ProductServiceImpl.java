@@ -65,8 +65,8 @@ public class ProductServiceImpl implements ProductService{
 	public PageResponse<ProductDTO> filter(SearchProductRequest request) {
 		Pageable pageable = PageRequestBuilder.getPageable(request.getSize(),
 				request.getPage(), request.getSorts());
-		FilterSpecifications<Product> productSearchSpecifications = new FilterSpecifications<>();
-		productSearchSpecifications.addCondition(request.filterCriteriaList());
+		FilterSpecifications<Product> productSearchSpecifications =
+				new FilterSpecifications<>(request.getFilterCriteriaList());
 		Page<Product> page = productRepository.findAll(productSearchSpecifications, pageable);
 		PageResponse<ProductDTO> response = new PageResponse<>();
 		List<ProductDTO> productDTOList = productMapper.convertToDtoList(page.getContent());

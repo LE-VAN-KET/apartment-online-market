@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 import java.security.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -22,8 +23,8 @@ public class OrderResponse {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
 
-    private Timestamp expiredAt;
-    public OrderResponse(UUID id, String reference, Long totalAmount, OrderStatus orderStatus, Timestamp expiredAt){
+    private Instant expiredAt;
+    public OrderResponse(UUID id, String reference, Long totalAmount, OrderStatus orderStatus, Instant expiredAt){
         this.id = id;
         this.reference = reference;
         this.totalAmount = new BigDecimal(totalAmount);

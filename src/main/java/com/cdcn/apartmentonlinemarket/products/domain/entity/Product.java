@@ -1,11 +1,13 @@
 package com.cdcn.apartmentonlinemarket.products.domain.entity;
 
 import com.cdcn.apartmentonlinemarket.common.enums.ProductStatus;
+import com.cdcn.apartmentonlinemarket.infrastructure.domain.entity.BaseEntity;
 import com.cdcn.apartmentonlinemarket.stores.domain.entity.Store;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,7 +21,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Product {
+@EntityListeners(AuditingEntityListener.class)
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

@@ -4,12 +4,14 @@ import com.cdcn.apartmentonlinemarket.common.enums.FieldType;
 import com.cdcn.apartmentonlinemarket.common.enums.FilterOperator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Convert;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,6 +23,8 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FilterCriteria implements Serializable  {
     private String key;
+
+    @JsonDeserialize(using = FilterOperatorDeserializer.class)
     private FilterOperator operation;
     private FieldType fieldType;
     private transient Object value;

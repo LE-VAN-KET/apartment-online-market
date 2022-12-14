@@ -18,7 +18,7 @@ public class SearchProductRequest {
     private List<SortRequest> sorts;
     private List<FilterCriteria> filterCriteriaList;
 
-    public List<FilterCriteria> filterCriteriaList() {
+    public List<FilterCriteria> getFilterCriteriaList() {
         if (Objects.isNull(this.filterCriteriaList)) return new ArrayList<>();
         return this.filterCriteriaList;
     }

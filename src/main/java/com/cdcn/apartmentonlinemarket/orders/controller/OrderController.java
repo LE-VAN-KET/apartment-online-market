@@ -1,9 +1,12 @@
 package com.cdcn.apartmentonlinemarket.orders.controller;
 
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.CreateOrderResponse;
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.request.CreateOrderRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.IPNRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.Response;
 import com.cdcn.apartmentonlinemarket.orders.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -31,6 +34,10 @@ public class OrderController {
         return orderService.Success(data);
     }
 
-
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SELLER')")
+    public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest request) {
+        return orderService.createOrder(request);
+    }
 
 }

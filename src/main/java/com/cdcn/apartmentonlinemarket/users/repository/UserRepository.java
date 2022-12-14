@@ -19,4 +19,7 @@ public interface UserRepository extends IJpaRepository<Users, UUID> {
                                                                                @Param("status") UserStatus status);
     boolean existsByUsername(String username);
     boolean existsByMailNotification(String email);
+
+    @Query(value = "select * from users as u  where u.id = :userId", nativeQuery = true)
+    Optional<Users> findUserById(@Param("userId") UUID userId);
 }

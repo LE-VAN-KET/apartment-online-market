@@ -9,4 +9,5 @@ public interface InventoryService {
     void create(Inventory inventory);
     void add(Product product);
     boolean isInStock(UUID skuCode);
+    void descreaseQuantityStock(UUID skuCode, int quantity);
 }

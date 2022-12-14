@@ -1,9 +1,11 @@
 package com.cdcn.apartmentonlinemarket.products.domain.entity;
 
 import com.cdcn.apartmentonlinemarket.common.enums.CategoryStatus;
+import com.cdcn.apartmentonlinemarket.infrastructure.domain.entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -13,7 +15,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+@EntityListeners(AuditingEntityListener.class)
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
