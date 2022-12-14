@@ -348,7 +348,7 @@ public class OrderServiceImpl implements OrderService{
         Users users = userRepository.findUserById(UUID.fromString(userId)).orElseThrow(() ->
                 new UserNotFoundException("User not found!"));
         orders.setUser(users);
-        orders.setExpiredAt(Instant.now().plusSeconds(3600));
+//        orders.setExpiredAt(Timestamp.from( Instant.now().plusSeconds(3600)));
         Orders savedOrder = save(orders);
 
         List<OrderItem> orderItemList = orderItemMapper.convertToListEntity(request);
@@ -357,10 +357,10 @@ public class OrderServiceImpl implements OrderService{
             orderItem.setOrderId(savedOrder.getId());
         });
         List<OrderItemDto> savedOrderItemDto = orderItemService.saveAll(orderItemList);
-        scheduleCancelOrderExpired();
+//        scheduleCancelOrderExpired();
         return new CreateOrderResponse(savedOrder.getId(), savedOrder.getReference(),
                 totalAmountOrder(orderItemList), savedOrder.getOrderStatus(),
-                savedOrder.getExpiredAt(), savedOrderItemDto);
+                savedOrderItemDto);
     }
 
     public Orders save(Orders orders) {
@@ -373,17 +373,17 @@ public class OrderServiceImpl implements OrderService{
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void scheduleCancelOrderExpired() {
-        StopWatch stopWatch = StopWatch.createStarted();
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                stopWatch.stop();
-                orderRepository.cancelOrderExpired(OrderStatus.CANCELED, Instant.now());
-                executor.shutdown();
-            }
-        }, 60, TimeUnit.MINUTES);
-
-    }
+//    public void scheduleCancelOrderExpired() {
+//        StopWatch stopWatch = StopWatch.createStarted();
+//        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+//        executor.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                stopWatch.stop();
+//                orderRepository.cancelOrderExpired(OrderStatus.CANCELED, Timestamp.from(Instant.now()));
+//                executor.shutdown();
+//            }
+//        }, 60, TimeUnit.MINUTES);
+//
+//    }
 }

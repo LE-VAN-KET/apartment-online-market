@@ -11,9 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.security.Timestamp;
-import java.time.Instant;
-import java.util.Set;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +31,7 @@ public class Orders extends BaseEntity {
     private UUID id;
 
     private String reference;
-    private Instant expiredAt;
+//    private Timestamp expiredAt;
 
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
