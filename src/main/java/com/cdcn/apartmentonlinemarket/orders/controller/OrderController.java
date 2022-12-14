@@ -21,8 +21,8 @@ public class OrderController {
     }
 
     @PostMapping("{order_reference}")
-    public Response checkout(@PathVariable String order_reference) throws  UnsupportedEncodingException {
-        return orderService.checkout(order_reference);
+    public Response checkout(@PathVariable String order_reference, @RequestParam("return_url") String return_url) throws  UnsupportedEncodingException {
+        return orderService.checkout(order_reference, return_url);
     }
     @GetMapping("ipn")
     public Response IPN(IPNRequest data) throws UnsupportedEncodingException {
