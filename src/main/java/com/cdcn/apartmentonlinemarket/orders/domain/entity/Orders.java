@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.security.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class Orders extends BaseEntity {
     private UUID id;
 
     private String reference;
-    private Timestamp expiredAt;
+    private Instant expiredAt;
 
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;

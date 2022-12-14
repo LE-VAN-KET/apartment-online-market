@@ -3,20 +3,33 @@ package com.cdcn.apartmentonlinemarket.orders.services;
 import com.cdcn.apartmentonlinemarket.common.enums.OrderStatus;
 import com.cdcn.apartmentonlinemarket.common.enums.PaymentMethod;
 import com.cdcn.apartmentonlinemarket.common.enums.PaymentStatus;
+import com.cdcn.apartmentonlinemarket.exception.ProductNotEnoughException;
+import com.cdcn.apartmentonlinemarket.exception.UserNotFoundException;
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.CreateOrderResponse;
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.OrderItemDto;
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.request.CreateOrderRequest;
+import com.cdcn.apartmentonlinemarket.orders.domain.entity.OrderItem;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.Orders;
+import com.cdcn.apartmentonlinemarket.orders.domain.mapper.OrderItemMapper;
 import com.cdcn.apartmentonlinemarket.orders.model.IPNRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.OrderResponse;
 import com.cdcn.apartmentonlinemarket.orders.model.Response;
 import com.cdcn.apartmentonlinemarket.orders.repository.OrderRepository;
 import com.cdcn.apartmentonlinemarket.orders.repository.PaymentRepository;
 import com.cdcn.apartmentonlinemarket.payments.domain.entity.Payment;
+import com.cdcn.apartmentonlinemarket.products.services.InventoryService;
+import com.cdcn.apartmentonlinemarket.security.jwt.TokenProvider;
+import com.cdcn.apartmentonlinemarket.users.domain.entity.Users;
+import com.cdcn.apartmentonlinemarket.users.repository.UserRepository;
 import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import nonapi.io.github.classgraph.json.JSONDeserializer;
 import nonapi.io.github.classgraph.json.JSONSerializer;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +39,27 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
+    private final OrderItemMapper orderItemMapper;
+    private final OrderItemService orderItemService;
+    private final InventoryService inventoryService;
+
     @Override
     public Response checkout(String order_reference) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -311,5 +336,54 @@ public class OrderServiceImpl implements OrderService{
             job.setMessage("Unknow error");
             return job;
         }
+    }
+
+    @Override
+    @Transactional
+    public CreateOrderResponse createOrder(CreateOrderRequest request) {
+        Orders orders = new Orders();
+        orders.setOrderStatus(OrderStatus.CREATED);
+        orders.setReference(Config.generateReference(10));
+        String userId = tokenProvider.getUserId();
+        Users users = userRepository.findUserById(UUID.fromString(userId)).orElseThrow(() ->
+                new UserNotFoundException("User not found!"));
+        orders.setUser(users);
+        orders.setExpiredAt(Instant.now().plusSeconds(3600));
+        Orders savedOrder = save(orders);
+
+        List<OrderItem> orderItemList = orderItemMapper.convertToListEntity(request);
+        orderItemList.forEach(orderItem -> {
+            inventoryService.descreaseQuantityStock(orderItem.getProductId(), orderItem.getQuantity());
+            orderItem.setOrderId(savedOrder.getId());
+        });
+        List<OrderItemDto> savedOrderItemDto = orderItemService.saveAll(orderItemList);
+        scheduleCancelOrderExpired();
+        return new CreateOrderResponse(savedOrder.getId(), savedOrder.getReference(),
+                totalAmountOrder(orderItemList), savedOrder.getOrderStatus(),
+                savedOrder.getExpiredAt(), savedOrderItemDto);
+    }
+
+    public Orders save(Orders orders) {
+        return orderRepository.save(orders);
+    }
+
+    private BigDecimal totalAmountOrder(List<OrderItem> orderItemList) {
+        return orderItemList.stream()
+                .map(orderItem -> orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void scheduleCancelOrderExpired() {
+        StopWatch stopWatch = StopWatch.createStarted();
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                stopWatch.stop();
+                orderRepository.cancelOrderExpired(OrderStatus.CANCELED, Instant.now());
+                executor.shutdown();
+            }
+        }, 60, TimeUnit.MINUTES);
+
     }
 }

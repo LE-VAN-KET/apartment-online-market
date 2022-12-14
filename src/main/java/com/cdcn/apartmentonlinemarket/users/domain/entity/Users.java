@@ -47,7 +47,7 @@ public class Users implements Serializable {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInformation userInformation;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -59,6 +59,6 @@ public class Users implements Serializable {
     @JoinColumn(name = "room_id")
     private Rooms room;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Orders> orders;
 }

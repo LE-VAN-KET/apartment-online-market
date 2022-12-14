@@ -1,5 +1,7 @@
 package com.cdcn.apartmentonlinemarket.orders.services;
 
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.CreateOrderResponse;
+import com.cdcn.apartmentonlinemarket.orders.domain.dto.request.CreateOrderRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.IPNRequest;
 import com.cdcn.apartmentonlinemarket.orders.model.Response;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -13,4 +15,5 @@ public interface OrderService {
     Response checkout(String order_reference) throws UnsupportedEncodingException;
     Response IPN(IPNRequest data) throws UnsupportedEncodingException;
     Response Success(IPNRequest data) throws UnsupportedEncodingException;
+    CreateOrderResponse createOrder(CreateOrderRequest request);
 }

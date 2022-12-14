@@ -14,8 +14,8 @@ import java.util.List;
 public class FilterSpecifications<T> implements Specification<T> {
     private List<FilterCriteria> filterConditions;
 
-    public FilterSpecifications() {
-        this.filterConditions = new ArrayList<>();
+    public FilterSpecifications(List<FilterCriteria> filterConditions) {
+        this.filterConditions = filterConditions;
     }
 
     @Override
@@ -28,9 +28,6 @@ public class FilterSpecifications<T> implements Specification<T> {
                 new Predicate[predicateList.size()]));
     }
 
-    public void addCondition(List<FilterCriteria> filterCriteriaList) {
-        filterConditions.addAll(filterCriteriaList);
-    }
 
     private Predicate buildPredicate(FilterCriteria condition, Root root, CriteriaQuery criteriaQuery,
                                      CriteriaBuilder criteriaBuilder) {
