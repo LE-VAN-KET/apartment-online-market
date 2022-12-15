@@ -8,6 +8,7 @@ import com.cdcn.apartmentonlinemarket.exception.UserNotFoundException;
 import com.cdcn.apartmentonlinemarket.orders.domain.dto.CreateOrderResponse;
 import com.cdcn.apartmentonlinemarket.orders.domain.dto.OrderItemDto;
 import com.cdcn.apartmentonlinemarket.orders.domain.dto.request.CreateOrderRequest;
+import com.cdcn.apartmentonlinemarket.orders.domain.entity.OrderInfo;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.OrderItem;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.Orders;
 import com.cdcn.apartmentonlinemarket.orders.domain.mapper.OrderItemMapper;
@@ -28,6 +29,7 @@ import nonapi.io.github.classgraph.json.JSONSerializer;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +61,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderItemMapper orderItemMapper;
     private final OrderItemService orderItemService;
     private final InventoryService inventoryService;
+    private final OrderInfoService orderInfoService;
 
     @Override
     public Response checkout(String order_reference) throws UnsupportedEncodingException {
@@ -358,6 +361,7 @@ public class OrderServiceImpl implements OrderService{
         });
         List<OrderItemDto> savedOrderItemDto = orderItemService.saveAll(orderItemList);
 //        scheduleCancelOrderExpired();
+        createOrderInfoDefault(savedOrder.getId());
         return new CreateOrderResponse(savedOrder.getId(), savedOrder.getReference(),
                 totalAmountOrder(orderItemList), savedOrder.getOrderStatus(),
                 savedOrderItemDto);
@@ -386,4 +390,12 @@ public class OrderServiceImpl implements OrderService{
 //        }, 60, TimeUnit.MINUTES);
 //
 //    }
+
+    @Async
+    public void createOrderInfoDefault(UUID orderId) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderId(orderId);
+        orderInfo.setCustomerName(tokenProvider.getUsername());
+        orderInfoService.create(orderInfo);
+    }
 }

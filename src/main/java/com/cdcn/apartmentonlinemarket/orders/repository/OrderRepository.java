@@ -3,6 +3,7 @@ package com.cdcn.apartmentonlinemarket.orders.repository;
 import com.cdcn.apartmentonlinemarket.common.enums.OrderStatus;
 import com.cdcn.apartmentonlinemarket.infrastructure.repository.IJpaRepository;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.Orders;
+import com.cdcn.apartmentonlinemarket.orders.model.OrderHistoryResponse;
 import com.cdcn.apartmentonlinemarket.orders.model.OrderResponse;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
