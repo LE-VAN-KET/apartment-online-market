@@ -11,9 +11,7 @@ import com.cdcn.apartmentonlinemarket.orders.domain.dto.request.CreateOrderReque
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.OrderItem;
 import com.cdcn.apartmentonlinemarket.orders.domain.entity.Orders;
 import com.cdcn.apartmentonlinemarket.orders.domain.mapper.OrderItemMapper;
-import com.cdcn.apartmentonlinemarket.orders.model.IPNRequest;
-import com.cdcn.apartmentonlinemarket.orders.model.OrderResponse;
-import com.cdcn.apartmentonlinemarket.orders.model.Response;
+import com.cdcn.apartmentonlinemarket.orders.model.*;
 import com.cdcn.apartmentonlinemarket.orders.repository.OrderRepository;
 import com.cdcn.apartmentonlinemarket.orders.repository.PaymentRepository;
 import com.cdcn.apartmentonlinemarket.payments.domain.entity.Payment;
@@ -361,6 +359,108 @@ public class OrderServiceImpl implements OrderService{
         return new CreateOrderResponse(savedOrder.getId(), savedOrder.getReference(),
                 totalAmountOrder(orderItemList), savedOrder.getOrderStatus(),
                 savedOrderItemDto);
+    }
+
+    @Override
+    public Response orderHistories(UUID user_id) {
+        Response res = new Response();
+        try
+        {
+            List<OrderHistoryResponse> data = orderRepository.orderHistories(user_id);
+            if(data != null)
+            {
+                res.setMessage("success");
+                res.setRspCode("200");
+                res.setData(data);
+            }
+            else {
+                res.setMessage("notfound");
+                res.setRspCode("403");
+            }
+        }
+        catch (Exception e)
+        {
+            res.setMessage("Error: "+ e.toString());
+            res.setRspCode("500");
+        }
+        return res;
+    }
+
+    @Override
+    public Response orderDetail(UUID order_id) {
+        Response res = new Response();
+        try
+        {
+            OrderDetailResponse data = orderRepository.orderDetail(order_id);
+            if(data != null)
+            {
+                data.setItems(orderRepository.orderItems(order_id));
+                res.setMessage("success");
+                res.setRspCode("200");
+                res.setData(data);
+            }
+            else {
+                res.setMessage("notfound");
+                res.setRspCode("403");
+            }
+        }
+        catch (Exception e)
+        {
+            res.setMessage("Error: "+ e.toString());
+            res.setRspCode("500");
+        }
+        return res;
+    }
+
+    @Override
+    public Response storeOrderDetail(UUID order_id, UUID store_id) {
+        Response res = new Response();
+        try
+        {
+            OrderDetailResponse data = orderRepository.orderDetail(order_id);
+            if(data != null)
+            {
+                data.setItems(orderRepository.storeOrderItems(order_id, store_id));
+                res.setMessage("success");
+                res.setRspCode("200");
+                res.setData(data);
+            }
+            else {
+                res.setMessage("notfound");
+                res.setRspCode("403");
+            }
+        }
+        catch (Exception e)
+        {
+            res.setMessage("Error: "+ e.toString());
+            res.setRspCode("500");
+        }
+        return res;
+    }
+
+    @Override
+    public Response storeOrderHistories(UUID store_id) {
+        Response res = new Response();
+        try
+        {
+            List<OrderHistoryResponse> data = orderRepository.storeOrderHistories(store_id);
+            if(data != null)
+            {
+                res.setMessage("success");
+                res.setRspCode("200");
+                res.setData(data);
+            }
+            else {
+                res.setMessage("notfound");
+                res.setRspCode("403");
+            }
+        }
+        catch (Exception e)
+        {
+            res.setMessage("Error: "+ e.toString());
+            res.setRspCode("500");
+        }
+        return res;
     }
 
     public Orders save(Orders orders) {
