@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/order")
@@ -40,4 +41,21 @@ public class OrderController {
         return orderService.createOrder(request);
     }
 
+    @GetMapping("/histories/{user_id}")
+    public Response orderHistory(@PathVariable("user_id") UUID user_id)   {
+        return orderService.orderHistories(user_id);
+    }
+
+    @GetMapping("/details/{order_id}")
+    public Response orderDetail(@PathVariable("order_id") UUID order_id)   {
+        return orderService.orderDetail(order_id);
+    }
+    @GetMapping("/store/histories/{store_id}")
+    public Response storeOsrderHistory(@PathVariable("store_id") UUID store_id)   {
+        return orderService.storeOrderHistories(store_id);
+    }
+    @GetMapping("/store/{store_id}/detail/{order_id}")
+    public Response storeOrderDetail(@PathVariable("store_id") UUID store_id, @PathVariable("order_id") UUID order_id)   {
+        return orderService.storeOrderDetail(order_id,store_id);
+    }
 }
