@@ -2,6 +2,7 @@ package com.cdcn.apartmentonlinemarket.products.services.impl;
 
 import java.util.*;
 
+import com.cdcn.apartmentonlinemarket.common.util.MinioUtil;
 import com.cdcn.apartmentonlinemarket.exception.ProductNotEnoughException;
 import com.cdcn.apartmentonlinemarket.exception.StoreNotfoundException;
 import com.cdcn.apartmentonlinemarket.helpers.pagination.PageRequestBuilder;
@@ -40,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private InventoryService inventoryService;
 	@Autowired
-	private FilesStorageService filesStorageService;
+	private MinioUtil minioUtil;
 
 	@Autowired
 	private StoreRepository storeRepository;
@@ -61,7 +62,8 @@ public class ProductServiceImpl implements ProductService{
 		Product product = productMapper.convertToEntity(productDto);
 		List<String> fileNames = new ArrayList<>();
 		Arrays.asList(files).stream().forEach(file -> {
-			filesStorageService.save(file);
+//			filesStorageService.save(file);
+			minioUtil.uploadFile(file);
 			fileNames.add(file.getOriginalFilename());
 		});
 		String images = String.join(";", fileNames);

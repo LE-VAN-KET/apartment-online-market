@@ -30,9 +30,9 @@ public class ProductController {
 		return products;
 	}
 
-	@PostMapping(value = "/products", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
-	public ProductDTO CreateProduct(@RequestPart ProductDTO product, @RequestParam("files") MultipartFile[] files) {
+	@PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ProductDTO CreateProduct(@RequestPart ProductDTO product, @RequestPart("files") MultipartFile[] files) {
 		ProductDTO p = productService.save(product, files);
 		return p;
 	}
