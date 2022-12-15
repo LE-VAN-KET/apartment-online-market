@@ -36,11 +36,10 @@ public class OrderDetailResponse {
     private OrderStatus orderStatus;
 
     private OffsetDateTime paidDate;
-    private String customerNumber;
     private String customerName;
     private Long roomId;
 
-    public OrderDetailResponse(UUID id, PaymentMethod type, BigDecimal totalPaid, String details, String reference, String currentCode, PaymentStatus status, OrderStatus orderStatus, OffsetDateTime createdDate, String customerNumber, String customerName, Long roomId) {
+    public OrderDetailResponse(UUID id, PaymentMethod type, BigDecimal totalPaid, String details, String reference, String currentCode, PaymentStatus status, OrderStatus orderStatus, OffsetDateTime createdDate, String customerName, Long roomId) {
         this.id = id;
         this.type = type;
         this.totalPaid = totalPaid;
@@ -50,7 +49,6 @@ public class OrderDetailResponse {
         this.paymentStatus = status;
         this.orderStatus = orderStatus;
         this.paidDate = createdDate;
-        this.customerNumber = customerNumber;
         this.customerName = customerName;
         this.roomId = roomId;
     }
