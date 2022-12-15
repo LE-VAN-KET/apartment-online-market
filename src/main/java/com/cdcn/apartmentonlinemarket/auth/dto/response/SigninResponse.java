@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 @Getter
 public class SigninResponse {
-    private UUID userId;
+    private String userId;
     private String accessToken;
     private String tokenType;
     private Long expiresIn;

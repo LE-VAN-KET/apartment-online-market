@@ -6,7 +6,9 @@ import java.util.UUID;
 import com.cdcn.apartmentonlinemarket.helpers.response.PageResponse;
 import com.cdcn.apartmentonlinemarket.products.domain.dto.request.SearchProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.cdcn.apartmentonlinemarket.products.domain.dto.ProductDTO;
@@ -43,6 +45,12 @@ public class ProductController {
 	@GetMapping("products/{id}")
 	public ProductDTO getDetailsProduct(@PathVariable("id") String productId) {
 		return productService.getOne(UUID.fromString(productId));
+	}
+
+	@GetMapping("/products/store")
+	@PreAuthorize("hasAnyAuthority('ROLE_SELLER', 'ROLE_ADMIN')")
+	public List<ProductDTO> getAllProductByStore(@Param("store_id") String storeId) {
+		return productService.getAllByOwner(UUID.fromString(storeId));
 	}
 
 }

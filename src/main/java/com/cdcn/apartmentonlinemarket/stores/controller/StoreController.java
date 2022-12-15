@@ -3,6 +3,7 @@ package com.cdcn.apartmentonlinemarket.stores.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.cdcn.apartmentonlinemarket.stores.domain.dto.StoreDTO;
@@ -25,5 +26,11 @@ public class StoreController {
 		System.out.println("controller");
 		StoreDTO p = service.save(dto);
 		return p;
+	}
+
+	@GetMapping("/stores/owner")
+	@PreAuthorize("hasAnyAuthority('ROLE_SELLER')")
+	public StoreDTO getStoreByOwner() {
+		return service.getStoreByOwner();
 	}
 }

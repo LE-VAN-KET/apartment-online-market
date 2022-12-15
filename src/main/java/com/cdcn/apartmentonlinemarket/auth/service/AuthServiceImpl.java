@@ -12,6 +12,7 @@ import com.cdcn.apartmentonlinemarket.exception.*;
 import com.cdcn.apartmentonlinemarket.infrastructure.repository.RedisTokenRepository;
 import com.cdcn.apartmentonlinemarket.security.jwt.TokenCreator;
 import com.cdcn.apartmentonlinemarket.security.jwt.TokenProvider;
+import com.cdcn.apartmentonlinemarket.security.model.CustomUserPrincipal;
 import com.cdcn.apartmentonlinemarket.security.model.TokenPair;
 import com.cdcn.apartmentonlinemarket.users.domain.entity.Roles;
 import com.cdcn.apartmentonlinemarket.users.domain.entity.UserInformation;
@@ -85,7 +86,9 @@ public class AuthServiceImpl implements AuthService{
             TokenPair tokenPair = createAndSaveToken(authentication);
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
+            CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
             return SigninResponse.builder()
+                    .userId(principal.getSubId())
                     .accessToken(tokenPair.getAccessToken())
                     .expiresIn(tokenProperties.getAccessTokenValidityInSeconds())
                     .refreshToken(tokenPair.getRefreshToken())
