@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,11 @@ public class OrderInfo {
 
     @Column(columnDefinition = "BINARY(16)")
     private UUID orderId;
-    private String customerNumber;
+
+    @Email
+    private String email;
     private String customerName;
+    @Column(length = 12)
+    private String phone;
     private Long roomId;
 }

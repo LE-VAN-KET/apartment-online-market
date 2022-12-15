@@ -21,8 +21,13 @@ public class Rooms implements Serializable {
 
     private Integer number;
     private String location;
-    private Integer stage;
 
-    @OneToMany(mappedBy="room")
+    private String citizenId;
+
+    @ManyToOne
+    @JoinColumn(name = "stage_id")
+    private Stages stage;
+
+    @OneToMany(mappedBy="room", fetch = FetchType.LAZY)
     private Set<Users> uses;
 }

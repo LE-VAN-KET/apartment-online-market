@@ -181,4 +181,10 @@ public class GlobalHandleException {
                 .body(new ErrorResponse(417, "One or more files are too large!"));
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({StageNotFoundException.class, OrderInfoNotFoundException.class})
+    protected ErrorResponse handleRoleNotFoundException(Exception ex) {
+        return handleNotFoundException(ex, "StageNotFoundException");
+    }
+
 }
