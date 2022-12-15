@@ -51,3 +51,12 @@ management:
     endpoint:
         health:
             show-details: always
+
+# Minio
+minio:
+    bucket:
+        name: minio-uploads-image-product
+    access:
+        key: admin
+        secret: password@123
+    url: ${MINIO_URL:http://139.59.96.208:7000}

@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableAsync
-public class ApartmentOnlineMarketApplication implements CommandLineRunner {
+public class ApartmentOnlineMarketApplication {
     @Resource
      FilesStorageService storageService;
 
@@ -20,9 +20,9 @@ public class ApartmentOnlineMarketApplication implements CommandLineRunner {
         SpringApplication.run(ApartmentOnlineMarketApplication.class, args);
     }
 
-    @Override
-    public void run(String... arg) {
-        storageService.init();
-    }
+//    @Override
+//    public void run(String... arg) {
+//        storageService.init();
+//    }
 
 }
