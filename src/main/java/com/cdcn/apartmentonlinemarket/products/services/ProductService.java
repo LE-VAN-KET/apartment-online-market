@@ -13,4 +13,5 @@ public interface ProductService {
 	ProductDTO save(ProductDTO productDto, MultipartFile[] files);
 	PageResponse<ProductDTO> filter(SearchProductRequest request);
 	ProductDTO getOne(UUID productId);
+	List<ProductDTO> getAllByOwner(UUID storeId);
 }

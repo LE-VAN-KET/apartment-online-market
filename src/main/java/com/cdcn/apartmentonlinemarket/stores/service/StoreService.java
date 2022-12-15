@@ -10,4 +10,5 @@ public interface StoreService {
 	Store getStoreById(UUID id);
 	List<StoreDTO> findAll();
 	StoreDTO save(StoreDTO dto);
+	StoreDTO getStoreByOwner();
 }

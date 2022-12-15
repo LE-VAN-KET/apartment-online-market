@@ -182,7 +182,7 @@ public class GlobalHandleException {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({StageNotFoundException.class, OrderInfoNotFoundException.class})
+    @ExceptionHandler({StageNotFoundException.class, OrderInfoNotFoundException.class, StoreNotfoundException.class})
     protected ErrorResponse handleRoleNotFoundException(Exception ex) {
         return handleNotFoundException(ex, "StageNotFoundException");
     }

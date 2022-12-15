@@ -3,12 +3,16 @@ package com.cdcn.apartmentonlinemarket.products.services.impl;
 import java.util.*;
 
 import com.cdcn.apartmentonlinemarket.exception.ProductNotEnoughException;
+import com.cdcn.apartmentonlinemarket.exception.StoreNotfoundException;
 import com.cdcn.apartmentonlinemarket.helpers.pagination.PageRequestBuilder;
 import com.cdcn.apartmentonlinemarket.helpers.specs.FilterSpecifications;
 import com.cdcn.apartmentonlinemarket.helpers.response.PageResponse;
 import com.cdcn.apartmentonlinemarket.products.domain.dto.request.SearchProductRequest;
 import com.cdcn.apartmentonlinemarket.products.services.FilesStorageService;
 import com.cdcn.apartmentonlinemarket.products.services.InventoryService;
+import com.cdcn.apartmentonlinemarket.security.jwt.TokenProvider;
+import com.cdcn.apartmentonlinemarket.stores.domain.entity.Store;
+import com.cdcn.apartmentonlinemarket.stores.repository.StoreRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +41,12 @@ public class ProductServiceImpl implements ProductService{
 	private InventoryService inventoryService;
 	@Autowired
 	private FilesStorageService filesStorageService;
+
+	@Autowired
+	private StoreRepository storeRepository;
+
+	@Autowired
+	private TokenProvider tokenProvider;
 
 	@Override
 	public List<ProductDTO> getAllProducts() {
@@ -79,6 +89,16 @@ public class ProductServiceImpl implements ProductService{
 		Product product = productRepository.findById(productId).orElseThrow(() ->
 				new ProductNotEnoughException(404, "Product not found with id!"));
 		return productMapper.convertToDto(product);
+	}
+
+	@Override
+	public List<ProductDTO> getAllByOwner(UUID storeId) {
+		String userId = tokenProvider.getUserId();
+		Store store =  storeRepository.findByIdAndOwnerId(storeId, UUID.fromString(userId)).orElseThrow(() ->
+				new StoreNotfoundException(404, "Store not found!"));
+		List<Product> productList = productRepository.findAllByStore(store);
+		return productList.isEmpty() ? Collections.emptyList() :
+				productMapper.convertToDtoList(productList);
 	}
 
 	@Async
