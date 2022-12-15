@@ -129,4 +129,10 @@ public class TokenProvider {
         return principal.getSubId();
     }
 
+    public String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        return principal.getUsername();
+    }
+
 }
