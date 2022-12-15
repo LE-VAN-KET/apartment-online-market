@@ -30,6 +30,7 @@ spring:
         multipart:
             max-file-size: 500KB
             max-request-size: 500KB
+            enabled: true
 
 keystore:
     password: team92pass
