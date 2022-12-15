@@ -1,6 +1,7 @@
 package com.cdcn.apartmentonlinemarket.helpers.specs;
 
 import com.cdcn.apartmentonlinemarket.common.enums.FieldType;
+import com.cdcn.apartmentonlinemarket.products.domain.entity.Category;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -101,6 +102,20 @@ public class FilterSpecifications<T> implements Specification<T> {
                     p = criteriaBuilder.and(criteriaBuilder.and(criteriaBuilder.ge(key, start),
                             criteriaBuilder.le(key, end)));
                 }
+                break;
+            case IN:
+                List<Object> values = condition.getValues();
+                Path key;
+                if (condition.getKey().equals("category_id")) {
+                    key = root.join("category").get("id");
+                } else {
+                    key = root.get(condition.getKey());
+                }
+                CriteriaBuilder.In<Object> inClause = criteriaBuilder.in(key);
+                for (Object vl : values) {
+                    inClause.value(condition.getFieldType().parse(vl.toString()));
+                }
+                p = criteriaBuilder.and(inClause);
                 break;
             default:
                 p = criteriaBuilder.equal(root.get(condition.getKey()), condition.getValue());
