@@ -23,13 +23,17 @@ public class OrderHistoryResponse {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
     private String customerName;
+    private String phone;
+    private String email;
     private Long roomId;
 
-    public OrderHistoryResponse(UUID id, String reference, Long totalAmount, OrderStatus orderStatus, String customerName, Long roomId) {
+    public OrderHistoryResponse(UUID id, String reference, Long totalAmount, OrderStatus orderStatus, String customerName, String phone, String email, Long roomId) {
         this.id = id;
         this.reference = reference;
         this.totalAmount = new BigDecimal(totalAmount);
         this.orderStatus = orderStatus;
+        this.phone = phone;
+        this.email = email;
         this.customerName = customerName;
         this.roomId = roomId;
     }
