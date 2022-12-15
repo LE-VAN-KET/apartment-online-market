@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Slf4j
 public enum FieldType {
@@ -54,6 +55,12 @@ public enum FieldType {
     STRING {
         public Object parse(String value) {
             return value;
+        }
+    },
+
+     UUID {
+        public Object parse(String value) {
+            return java.util.UUID.fromString(value);
         }
     };
 

@@ -18,7 +18,8 @@ public enum FilterOperator {
     START_WITH("startwith"),
     END_WITH("endwith"),
     IS_EMPTY("isempty"),
-    IS_NOT_EMPTY("isnotempty");
+    IS_NOT_EMPTY("isnotempty"),
+    IN("in");
 
     private final String value;
 
